@@ -8,7 +8,8 @@ I made a retro Nokia Snake Game using vanilla HTML/CSS/JavaScript with a pink th
 # New features that are not in the tutorial
 
 1. Food will not collide with snake's body.
-2. Render error when the snake hit the wall or ate itself.
+2. Error message will be rendered when the snake hit the wall or ate itself.
+3. Logo will not collide with game instruction text.
 
 # Try out
 
