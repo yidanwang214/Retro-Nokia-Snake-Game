@@ -86,3 +86,10 @@ body,
 #logo {
   position: absolute;
 }
+
+#failureReason {
+  display: none;
+  text-wrap: nowrap;
+  font-size: 25px;
+  color: black;
+}

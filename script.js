@@ -4,6 +4,7 @@ const instructionText = document.getElementById("instruction-text");
 const logo = document.getElementById("logo");
 const score = document.getElementById("score");
 const highScoreText = document.getElementById("highScore");
+const failureReason = document.getElementById("failureReason");
 
 // defind game varaibles
 const gridSize = 20;
@@ -14,6 +15,7 @@ let direction = "right";
 let gameInterval; // gameInterval keeps track of when we are running our game
 let gameSpeedDelay = 333;
 let gameStarted = false;
+let gameTimeout;
 
 // define functions
 // draw game map, snake and food
@@ -57,6 +59,18 @@ function drawFood() {
 
 // randomly generate coordinates for food
 function generateFood() {
+  let coordinates;
+  do {
+    coordinates = generateCoordinate();
+  } while (
+    snake.some(
+      (value) => value.x === coordinates.x && value.y === coordinates.y
+    )
+  );
+  return coordinates;
+}
+// helper function that generates coordinates that will not collide with snake's body
+function generateCoordinate() {
   // [0,1), +1 because the grid starts at 1
   const x = Math.floor(Math.random() * gridSize + 1);
   const y = Math.floor(Math.random() * gridSize + 1);
@@ -118,14 +132,20 @@ function checkCollision() {
   const head = snake[0];
   // reset game when snake is out of bound
   if (head.x < 1 || head.x > gridSize || head.y < 1 || head.y > gridSize) {
+    getFailureInfo("Ah oh, your snake hit the wall T^T");
     resetGame();
   }
   // reset game when snake's head is overlapping with its body
   for (let i = 1; i < snake.length; i++) {
     if (head.x === snake[i].x && head.y === snake[i].y) {
+      getFailureInfo("Ah oh, your snake just ate itself T^T");
       resetGame();
     }
   }
+}
+function getFailureInfo(failReason) {
+  failureReason.textContent = failReason;
+  failureReason.style.display = "block";
 }
 
 // reset game
@@ -195,6 +215,8 @@ function startGame() {
   gameStarted = true; // keep track of a running game
   instructionText.style.display = "none";
   logo.style.display = "none";
+  failureReason.textContent = "";
+  failureReason.style.display = "none";
   gameInterval = setInterval(() => {
     move();
     checkCollision();
